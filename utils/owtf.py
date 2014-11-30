@@ -11,6 +11,9 @@ from owtf_testing.utils.db import db_setup
 
 class OWTFTestCase(unittest.TestCase):
 
+    PROTOCOL = 'http'
+    IP = '127.0.0.1'
+    PORT = '8888'
 
     def setUp(self):
         # Reset the database.
