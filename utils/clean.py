@@ -28,5 +28,4 @@ def db_setup(cmd):
 def clean_owtf_review():
     """Remove OWTF owtf_review output directory."""
     pwd = os.getcwd()
-    print "Removing:", os.path.join(pwd, DIR_OWTF_REVIEW)
     shutil.rmtree(os.path.join(pwd, DIR_OWTF_REVIEW), ignore_errors=True)

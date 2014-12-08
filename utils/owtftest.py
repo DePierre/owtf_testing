@@ -7,8 +7,10 @@ import unittest
 import mock
 from hamcrest import *
 
-from owtf_testing.utils.clean import db_setup, clean_owtf_review
-from owtf_testing.utils.service.web.server import WebServerProcess, HandlerBuilder
+from utils.clean import db_setup, clean_owtf_review
+from utils.service.web.server import WebServerProcess, HandlerBuilder
+
+import owtf
 
 
 class OWTFTestCase(unittest.TestCase):
@@ -22,17 +24,14 @@ class OWTFTestCase(unittest.TestCase):
     def setUp(self):
         self.clean_old_runs()
         self.raw_input_patcher = mock.patch('__builtin__.raw_input', return_value=['Y'])
-        self.interface_server_patcher = mock.patch('framework.interface.server.InterfaceServer.start', side_effect=KeyboardInterrupt)
         self.log_info_patcher = mock.patch('owtf.logging.info')
         self.log_warn_patcher = mock.patch('owtf.logging.warn')
         self.raw_input_patcher.start()
-        self.interface_server_patcher.start()
         self.mock_log_info = self.log_info_patcher.start()
         self.mock_log_warn = self.log_warn_patcher.start()
 
     def tearDown(self):
         self.raw_input_patcher.stop()
-        self.interface_server_patcher.stop()
         self.log_info_patcher.stop()
         self.log_warn_patcher.stop()
 
@@ -44,6 +43,34 @@ class OWTFTestCase(unittest.TestCase):
         db_setup('init')
         # Remove old OWTF outputs
         clean_owtf_review()
+
+
+class OWTFCliTestCase(OWTFTestCase):
+
+    """OWTF test case for testing the CLI."""
+
+    DEFAULT_ARGS = ['owtf.py', '--nowebui']
+
+    def __init__(self, methodName='runTest'):
+        super(OWTFCliTestCase, self).__init__(methodName)
+        self.args = self.DEFAULT_ARGS
+
+    def setUp(self):
+        super(OWTFCliTestCase, self).setUp()
+        self.args = self.DEFAULT_ARGS
+
+    @classmethod
+    def run_owtf(cls, args=None):
+        """Run OWTF with args."""
+        args = args or cls.DEFAULT_ARGS
+        owtf.main(args)
+
+    @staticmethod
+    def assert_called_with(mock_obj, *args):
+        """Assert that ``mock_obj`` has been called with all elements from
+        ``args`` (in order).
+        """
+        mock_obj.assert_any_call(*args)
 
 
 class OWTFWebPluginTestCase(unittest.TestCase):
