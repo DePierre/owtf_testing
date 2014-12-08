@@ -7,20 +7,20 @@ import unittest
 import mock
 from hamcrest import *
 
-from owtf_testing.utils.db import db_setup
+from owtf_testing.utils.clean import db_setup, clean_owtf_review
 from owtf_testing.utils.service.web.server import WebServerProcess, HandlerBuilder
 
 
 class OWTFTestCase(unittest.TestCase):
+
+    """Basic OWTF test case that initialises basic patches."""
 
     PROTOCOL = 'http'
     IP = '127.0.0.1'
     PORT = '8888'
 
     def setUp(self):
-        # Reset the database.
-        db_setup('clean')
-        db_setup('init')
+        self.clean_old_runs()
         self.raw_input_patcher = mock.patch('__builtin__.raw_input', return_value=['Y'])
         self.interface_server_patcher = mock.patch('framework.interface.server.InterfaceServer.start', side_effect=KeyboardInterrupt)
         self.log_info_patcher = mock.patch('owtf.logging.info')
@@ -35,9 +35,15 @@ class OWTFTestCase(unittest.TestCase):
         self.interface_server_patcher.stop()
         self.log_info_patcher.stop()
         self.log_warn_patcher.stop()
+
+    @staticmethod
+    def clean_old_runs():
+        """Clean the database and the older owtf_review directory."""
         # Reset the database.
         db_setup('clean')
         db_setup('init')
+        # Remove old OWTF outputs
+        clean_owtf_review()
 
 
 class OWTFWebPluginTestCase(unittest.TestCase):
