@@ -1,46 +1,40 @@
 import mock
 from hamcrest import *
 
+from testfixtures import log_capture
+
+from owtf_testing.utils.utils import dummy
 from owtf_testing.utils.owtftest import OWTFCliTestCase
 
+from framework.core import Core
 
-@mock.patch('framework.plugin.plugin_handler.PluginHandler.ShowPluginTypePlugins')
+
+@mock.patch.object(Core, 'enable_logging', dummy)
 class OWTFCliListPluginsTest(OWTFCliTestCase):
 
-    def test_cli_list_plugins_aux(self, mock_show_plugin_type_plugins):
+    @log_capture()
+    def test_cli_list_plugins_aux(self, logger):
         """Run OWTF to list the aux plugins."""
         self.args += ['-l', 'aux']
-        group = 'aux'
-        types = ['exploit', 'smb', 'bruteforce', 'dos', 'wafbypasser', 'se', 'rce', 'selenium']
+        expected = ['Available AUXILIARY plugins', 'exploit', 'smb', 'bruteforce', 'dos', 'wafbypasser', 'se', 'rce', 'selenium']
         self.run_owtf()
 
-        self.assert_show_plugin_type_plugins_called_with(
-            mock_show_plugin_type_plugins,
-            types, group)
+        self.assert_are_in_logs(logger, expected)
 
-    def test_cli_list_plugins_net(self, mock_show_plugin_type_plugins):
+    @log_capture()
+    def test_cli_list_plugins_net(self, logger):
         """Run OWTF to list the net plugins."""
         self.args += ['-l', 'net']
-        group = 'net'
-        types = ['active', 'bruteforce']
+        expected = ['Available NET plugins', 'active', 'bruteforce']
         self.run_owtf()
 
-        self.assert_show_plugin_type_plugins_called_with(
-            mock_show_plugin_type_plugins,
-            types, group)
+        self.assert_are_in_logs(logger, expected)
 
-    def test_cli_list_plugins_web(self, mock_show_plugin_type_plugins):
+    @log_capture()
+    def test_cli_list_plugins_web(self, logger):
         """Run OWTF to list the web plugins."""
         self.args += ['-l', 'web']
-        group = 'web'
-        types = ['external', 'active', 'passive', 'grep', 'semi_passive']
+        expected = ['Available WEB plugins', 'external', 'active', 'passive', 'grep', 'semi_passive']
         self.run_owtf()
 
-        self.assert_show_plugin_type_plugins_called_with(
-            mock_show_plugin_type_plugins,
-            types, group)
-
-    @classmethod
-    def assert_show_plugin_type_plugins_called_with(cls, mock_obj, plugin_types, plugin_group):
-        for plugin_type in plugin_types:
-            cls.assert_called_with(mock_obj, plugin_type, plugin_group)
+        self.assert_are_in_logs(logger, expected)

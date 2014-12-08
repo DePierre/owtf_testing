@@ -1,39 +1,54 @@
 import os
 import re
 import sys
+import copy
+import logging
 import subprocess
 
+import tornado
 import unittest
 import mock
 from hamcrest import *
 
-from utils.clean import db_setup, clean_owtf_review
-from utils.service.web.server import WebServerProcess, HandlerBuilder
+from owtf_testing.utils.clean import db_setup, clean_owtf_review
+from owtf_testing.utils.logs import TestHandler, Matcher
+from owtf_testing.utils.service.web.server import WebServerProcess, HandlerBuilder
 
 import owtf
 
 
-class OWTFTestCase(unittest.TestCase):
+class OWTFCliTestCase(unittest.TestCase):
 
     """Basic OWTF test case that initialises basic patches."""
 
+    DEFAULT_ARGS = ['owtf.py', '--nowebui']
     PROTOCOL = 'http'
     IP = '127.0.0.1'
     PORT = '8888'
 
+    def __init__(self, methodName='runTest'):
+        super(OWTFCliTestCase, self).__init__(methodName)
+        self.args = copy.copy(self.DEFAULT_ARGS)
+
     def setUp(self):
+        self.args = copy.copy(self.DEFAULT_ARGS)
         self.clean_old_runs()
         self.raw_input_patcher = mock.patch('__builtin__.raw_input', return_value=['Y'])
-        self.log_info_patcher = mock.patch('owtf.logging.info')
-        self.log_warn_patcher = mock.patch('owtf.logging.warn')
         self.raw_input_patcher.start()
-        self.mock_log_info = self.log_info_patcher.start()
-        self.mock_log_warn = self.log_warn_patcher.start()
 
     def tearDown(self):
         self.raw_input_patcher.stop()
-        self.log_info_patcher.stop()
-        self.log_warn_patcher.stop()
+        # Stop any previous tornado instance.
+        tornado.ioloop.IOLoop.instance().stop()
+
+    ###
+    # OWTF utils methods.
+    ###
+
+    def run_owtf(self, args=None):
+        """Run OWTF with args."""
+        args = args or self.args or OWTFCliTestCase.DEFAULT_ARGS
+        owtf.main(args)
 
     @staticmethod
     def clean_old_runs():
@@ -44,26 +59,27 @@ class OWTFTestCase(unittest.TestCase):
         # Remove old OWTF outputs
         clean_owtf_review()
 
+    ###
+    # Specific methods that test logs and function calls.
+    ###
 
-class OWTFCliTestCase(OWTFTestCase):
+    @staticmethod
+    def assert_has_been_logged(logger, msg):
+        """Assert that ``msg`` was logged by ``logger``."""
+        messages = [record.msg for record in logger.records]
+        assert_that(messages, has_item(msg))
 
-    """OWTF test case for testing the CLI."""
+    @staticmethod
+    def assert_is_in_logs(logger, msg):
+        """Assert that ``msg`` is part of a message logged by ``logger``."""
+        messages = [record.msg for record in logger.records]
+        assert_that(str(messages), contains_string(msg))
 
-    DEFAULT_ARGS = ['owtf.py', '--nowebui']
-
-    def __init__(self, methodName='runTest'):
-        super(OWTFCliTestCase, self).__init__(methodName)
-        self.args = self.DEFAULT_ARGS
-
-    def setUp(self):
-        super(OWTFCliTestCase, self).setUp()
-        self.args = self.DEFAULT_ARGS
-
-    @classmethod
-    def run_owtf(cls, args=None):
-        """Run OWTF with args."""
-        args = args or cls.DEFAULT_ARGS
-        owtf.main(args)
+    @staticmethod
+    def assert_are_in_logs(logger, msgs):
+        """Assert that each message of ``msgs`` is part of a message logged by ``logger``."""
+        for msg in msgs:
+            OWTFCliTestCase.assert_is_in_logs(logger, msg)
 
     @staticmethod
     def assert_called_with(mock_obj, *args):
@@ -73,7 +89,7 @@ class OWTFCliTestCase(OWTFTestCase):
         mock_obj.assert_any_call(*args)
 
 
-class OWTFWebPluginTestCase(unittest.TestCase):
+class OWTFCliWebPluginTestCase(OWTFCliTestCase):
 
     PROTOCOL = 'http'
     IP = '127.0.0.1'
@@ -83,29 +99,11 @@ class OWTFWebPluginTestCase(unittest.TestCase):
     DYNAMIC_METHOD_REGEX = "^set_(head|get|post|put|delete|options|connect)_response"
 
     def setUp(self):
-        # Reset the database.
-        db_setup('clean')
-        db_setup('init')
-        self.raw_input_patcher = mock.patch('__builtin__.raw_input', return_value=['Y'])
-        self.interface_server_patcher = mock.patch('framework.interface.server.InterfaceServer.start', side_effect=KeyboardInterrupt)
-        self.run_plugin_patcher = mock.patch('framework.plugin.plugin_handler.PluginHandler.RunPlugin', return_value='')
-        self.rank_plugin_patcher = mock.patch('framework.plugin.plugin_handler.PluginHandler.rank_plugin', return_value='-1')
-        self.raw_input_patcher.start()
-        self.mock_run_plugin = self.run_plugin_patcher.start()
-        self.mock_rank_plugin = self.rank_plugin_patcher.start()
+        super(OWTFCliWebPluginTestCase, self).setUp()
         # Web server initialization.
         self.responses = {}
         self.server = WebServerProcess(self.IP, self.PORT, self.build_handlers())
         self.server.start()
-
-    def tearDown(self):
-        self.raw_input_patcher.stop()
-        self.run_plugin_patcher.stop()
-        self.rank_plugin_patcher.stop()
-        self.server.stop()
-        # Reset the database.
-        db_setup('clean')
-        db_setup('init')
 
     def build_handlers(self):
         """
