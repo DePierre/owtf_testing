@@ -5,7 +5,6 @@ import copy
 import logging
 import subprocess
 
-import tornado
 import unittest
 import mock
 from hamcrest import *
@@ -37,8 +36,6 @@ class OWTFCliTestCase(unittest.TestCase):
 
     def tearDown(self):
         self.raw_input_patcher.stop()
-        # Stop any previous tornado instance.
-        tornado.ioloop.IOLoop.instance().stop()
 
     ###
     # OWTF utils methods.
