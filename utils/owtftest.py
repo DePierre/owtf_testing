@@ -71,6 +71,12 @@ class OWTFCliTestCase(unittest.TestCase):
         assert_that(messages, has_item(msg))
 
     @staticmethod
+    def assert_has_not_been_logged(logger, msg):
+        """Assert that ``msg`` was not logged by ``logger``."""
+        messages = [record.msg for record in logger.records]
+        assert_that(messages, not(has_item(msg)))
+
+    @staticmethod
     def assert_is_in_logs(logger, msg):
         """Assert that ``msg`` is part of a message logged by ``logger``."""
         messages = [record.msg for record in logger.records]
