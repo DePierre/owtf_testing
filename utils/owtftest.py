@@ -11,7 +11,6 @@ import mock
 from hamcrest import *
 
 from owtf_testing.utils.clean import db_setup, clean_owtf_review
-from owtf_testing.utils.logs import TestHandler, Matcher
 from owtf_testing.utils.service.web.server import WebServerProcess, HandlerBuilder
 
 import owtf
@@ -45,9 +44,14 @@ class OWTFCliTestCase(unittest.TestCase):
     # OWTF utils methods.
     ###
 
-    def run_owtf(self, args=None):
-        """Run OWTF with args."""
-        args = args or self.args or OWTFCliTestCase.DEFAULT_ARGS
+    def run_owtf(self, *extra_args):
+        """Run OWTF with args plus ``extra_args`` if any."""
+        if self.args:
+            args = self.args[:]
+        else:
+            args = self.DEFAULT_ARGS[:]
+        if extra_args:
+            args += extra_args
         owtf.main(args)
 
     @staticmethod
