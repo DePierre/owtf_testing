@@ -9,10 +9,10 @@ from owtf_testing.utils.owtftest import OWTFCliTestCase
 from framework.core import Core
 
 
-@unittest.skip("OWTF needs to be fixed for these tests (see owtf/#375).")
 @mock.patch.object(Core, 'enable_logging', dummy)
 class OWTFCliScopeRunTest(OWTFCliTestCase):
 
+    @unittest.skip("Currently broken.")
     @log_capture()
     def test_cli_target_with_no_protocol(self, logger):
         """Run OWTF with a target but no protocol."""
@@ -24,8 +24,7 @@ class OWTFCliScopeRunTest(OWTFCliTestCase):
     def test_cli_target_is_invalid(self, logger):
         """Run OWTF with an invalid target."""
         invalid_target = 'a' * 63 + '.invalid'
-        args = self.args[:] + '%s://%s' % (self.PROTOCOL, invalid_target)
-        self.run_owtf(args=args)
+        self.run_owtf('%s://%s' % (self.PROTOCOL, invalid_target))
         self.assert_has_been_logged(
             logger,
             "Unable to resolve: '%s'" % invalid_target)
