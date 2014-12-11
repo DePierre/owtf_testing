@@ -83,10 +83,22 @@ class OWTFCliTestCase(unittest.TestCase):
         assert_that(str(messages), contains_string(msg))
 
     @staticmethod
+    def assert_is_not_in_logs(logger, msg):
+        """Assert that ``msg`` is not part of a message logged by ``logger``."""
+        messages = [record.msg for record in logger.records]
+        assert_that(str(messages), not(contains_string(msg)))
+
+    @staticmethod
     def assert_are_in_logs(logger, msgs):
         """Assert that each message of ``msgs`` is part of a message logged by ``logger``."""
         for msg in msgs:
             OWTFCliTestCase.assert_is_in_logs(logger, msg)
+
+    @staticmethod
+    def assert_are_not_in_logs(logger, msgs):
+        """Assert that each message of ``msgs`` is not part of a message logged by ``logger``."""
+        for msg in msgs:
+            OWTFCliTestCase.assert_is_not_in_logs(logger, msg)
 
     @staticmethod
     def assert_called_with(mock_obj, *args):
