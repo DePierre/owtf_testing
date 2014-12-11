@@ -28,3 +28,9 @@ class OWTFCliScopeRunTest(OWTFCliTestCase):
         self.assert_has_been_logged(
             logger,
             "Unable to resolve: '%s'" % invalid_target)
+
+    @log_capture()
+    def test_cli_target_is_valid_http(self, logger):
+        """Run OWTF with a valid http target."""
+        self.run_owtf('-s', '%s://%s:%s' % (self.PROTOCOL, self.IP, self.PORT))
+        self.assert_has_been_logged(logger, "All jobs have been done. Exiting.")
