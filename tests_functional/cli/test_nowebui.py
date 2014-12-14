@@ -12,6 +12,8 @@ from framework.core import Core
 @mock.patch.object(Core, 'enable_logging', dummy)
 class OWTFCliNoWebUITest(OWTFCliTestCase):
 
+    categories = ['cli', 'fast']
+
     @log_capture()
     def test_cli_no_webui(self, logger):
         """Run OWTF without its Web UI."""

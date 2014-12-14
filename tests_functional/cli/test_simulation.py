@@ -11,6 +11,8 @@ from framework.dependency_management.dependency_resolver import ServiceLocator
 @mock.patch.object(Core, 'enable_logging', dummy)
 class OWTFCliSimulationTest(OWTFCliTestCase):
 
+    categories = ['cli', 'fast']
+
     @log_capture()
     def test_cli_simulation(self, logger):
         """Run OWTF in simulation mode."""

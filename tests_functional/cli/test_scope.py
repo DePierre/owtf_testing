@@ -10,7 +10,9 @@ from framework.core import Core
 
 
 @mock.patch.object(Core, 'enable_logging', dummy)
-class OWTFCliScopeRunTest(OWTFCliTestCase):
+class OWTFCliScopeTest(OWTFCliTestCase):
+
+    categories = ['cli']
 
     @unittest.skip("Currently broken.")
     @log_capture()

@@ -12,6 +12,8 @@ from framework.core import Core
 @mock.patch.object(Core, 'enable_logging', dummy)
 class OWTFCliListPluginsTest(OWTFCliTestCase):
 
+    categories = ['cli']
+
     @log_capture()
     def test_cli_list_plugins_aux(self, logger):
         """Run OWTF to list the aux plugins."""

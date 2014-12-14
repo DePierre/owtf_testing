@@ -11,6 +11,8 @@ from framework.core import Core
 @mock.patch.object(Core, 'enable_logging', dummy)
 class OWTFCliEmptyRunTest(OWTFCliTestCase):
 
+    categories = ['cli', 'fast']
+
     @log_capture()
     def test_cli_empty_run(self, logger):
         """Run OWTF without parameters."""
