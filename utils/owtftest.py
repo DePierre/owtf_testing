@@ -10,7 +10,7 @@ import mock
 from hamcrest import *
 
 from owtf_testing.utils.clean import db_setup, clean_owtf_review
-from owtf_testing.utils.service.web.server import WebServerProcess, HandlerBuilder
+from owtf_testing.utils.service.web.server import WebServerProcess
 
 import owtf
 
@@ -110,6 +110,7 @@ class OWTFCliTestCase(unittest.TestCase):
 
 class OWTFCliWebPluginTestCase(OWTFCliTestCase):
 
+    DEFAULT_ARGS = ['owtf.py', '--nowebui']
     PROTOCOL = 'http'
     IP = '127.0.0.1'
     PORT = '8888'
@@ -120,48 +121,8 @@ class OWTFCliWebPluginTestCase(OWTFCliTestCase):
     def setUp(self):
         super(OWTFCliWebPluginTestCase, self).setUp()
         # Web server initialization.
-        self.responses = {}
-        self.server = WebServerProcess(self.IP, self.PORT, self.build_handlers())
+        self.server = WebServerProcess(self.IP, self.PORT)
         self.server.start()
 
-    def build_handlers(self):
-        """
-        For each recorded response, generates a (path, handler) tuple which
-        will be passed to the Tornado web server.
-        """
-        handlers = []
-        handler_builder = HandlerBuilder()
-        for path, params in self.responses.items():
-            handlers.append((path, handler_builder.get_handler(params)))
-        return handlers
-
-    def __getattr__(self, name):
-        """
-        If the method name matches with set_post_response, set_put_response,
-        set_post_response_from_file, etc. generates a dynamic method.
-        """
-        dynamic_method_matcher = re.match(self.DYNAMIC_METHOD_REGEX, name)
-        if dynamic_method_matcher is not None:
-            method_name = dynamic_method_matcher.group(1)
-            return self.generate_callable_for_set_response(method_name)
-        else:
-            raise AttributeError("'WebPluginTestCase' object has no attribute '" + name + "'")
-
-    def generate_callable_for_set_response(self, method_name, from_file):
-        """Returns a function that will be called to set a response."""
-        def dynamic_method(path, content="", headers={}, status_code=200):
-            self.set_response(path, content, headers, method_name, status_code)
-        return dynamic_method
-
-    def set_response(self, path, content="", headers={}, method="get", status_code=200):
-        """
-        Sets the response for the server in the given path. Optionally, it
-        is possible to specify the headers to be changed, the HTTP method
-        to answer to, and the response HTTP status code.
-        """
-        if not (path in self.responses):
-            self.responses[path] = {}
-            self.responses[path][method] = {
-                "content": content,
-                "headers": headers,
-                "code": status_code}
+    def tearDown(self):
+        self.server.stop()
