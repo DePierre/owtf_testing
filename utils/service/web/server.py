@@ -1,18 +1,25 @@
+import os
+import sys
+import time
+import signal
+import logging
+import httplib
+
+from multiprocessing import Process
+
 import tornado.ioloop
 import tornado.web
-from multiprocessing import Process
-import httplib
-import time
-import random
-import string
-import os
-import signal
-import sys
 
 
 class DummyGetHandler(tornado.web.RequestHandler):
     def get(self):
         self.write("Hello, world!")
+
+
+class DummyWebApplication(tornado.web.Application):
+
+    def log_request(self, handler):
+        pass
 
 
 class WebServerProcess(object):
@@ -28,10 +35,11 @@ class WebServerProcess(object):
             Creates a web server in another process and wait until it is ready to
             handle requests.
         """
-        application = self.create_application()
+        # Create the web application
+        self.application = DummyWebApplication([(r'/', DummyGetHandler)])
         self.process = Process(
             target=start_application,
-            args=(application, self.ip, self.port))
+            args=(self.application, self.ip, self.port))
         self.process.start()
         self.wait_until_server_is_ready()
 
@@ -68,10 +76,6 @@ class WebServerProcess(object):
             return False
         else:
             return self.process.is_alive()
-
-    def create_application(self):
-        """Creates a Tornado application with the given handlers."""
-        return tornado.web.Application([(r'/', DummyGetHandler)])
 
 
 def start_application(application, ip, port):
