@@ -6,7 +6,7 @@ from owtf_testing.utils.owtftest import OWTFCliWebPluginTestCase
 
 class OWTFCliWebActiveWVS006PluginTest(OWTFCliWebPluginTestCase):
 
-    categories = ['plugins', 'web', 'owtf-wvs-006']
+    categories = ['plugins', 'web', 'owtf-wvs-006', 'fast']
 
     def test_web_active(self):
         """Test OWTF WEB active plugins."""
