@@ -112,25 +112,33 @@ class OWTFCliTestCase(unittest.TestCase):
         if name and name in self.logs:
             assert_that(self.logs[name], has_item(msg))
         else:
-            assert_that(logs_all, has_item(msg))
+            assert_that(self.logs_all, has_item(msg))
 
     def assert_has_not_been_logged(self, msg, name=None):
         if name and name in self.logs:
             assert_that(self.logs[name], not(has_item(msg)))
         else:
-            assert_that(logs_all, has_item(msg))
+            assert_that(self.logs_all, not(has_item(msg)))
 
     def assert_is_in_logs(self, msg, name=None):
         if name and name in self.logs:
-            assert_that(str(self.logs[name]), contains_string(msg))
+            self.assertTrue(
+                msg in str(self.logs[name]),
+                msg="Was expecting '%s' in '%s'." % (msg, self.logs[name]))
         else:
-            assert_that(str(logs_all), contains_string(msg))
+            self.assertTrue(
+                msg in str(self.logs_all),
+                msg="Was expecting '%s' in '%s'." % (msg, self.logs_all))
 
     def assert_is_not_in_logs(self, msg, name=None):
         if name and name in self.logs:
-            assert_that(str(self.logs[name]), not(contains_string(msg)))
+            self.assertFalse(
+                msg in str(self.logs[name]),
+                msg="Was not expecting '%s' in '%s'." % (msg, self.logs[name]))
         else:
-            assert_that(str(logs_all), not(contains_string(msg)))
+            self.assertFalse(
+                msg in str(self.logs_all),
+                msg="Was not expecting '%s' in '%s'." % (msg, self.logs_all))
 
     def assert_are_in_logs(self, msgs, name=None):
         for msg in msgs:
