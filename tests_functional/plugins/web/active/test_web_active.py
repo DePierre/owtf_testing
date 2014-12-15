@@ -4,9 +4,9 @@ from hamcrest import *
 from owtf_testing.utils.owtftest import OWTFCliWebPluginTestCase
 
 
-class OWTFCliWebActiveWVS006PluginTest(OWTFCliWebPluginTestCase):
+class OWTFCliWebActivePluginTest(OWTFCliWebPluginTestCase):
 
-    categories = ['plugins', 'web', 'owtf-wvs-006', 'fast']
+    categories = ['plugins', 'web', 'active', 'owtf-wvs-006']
 
     def test_web_active(self):
         """Test OWTF WEB active plugins."""

@@ -6,7 +6,7 @@ from owtf_testing.tests_functional.cli.test_simulation import OWTFCliSimulationT
 
 from owtf_testing.tests_functional.plugins.web.test_web import OWTFCliWebPluginTest
 
-from owtf_testing.tests_functional.plugins.web.active.test_owcs_wvs_006 import OWTFCliWebActiveWVS006PluginTest
+from owtf_testing.tests_functional.plugins.web.active.test_web_active import OWTFCliWebActivePluginTest
 
 
 SUITES = [
@@ -17,5 +17,5 @@ SUITES = [
     OWTFCliSimulationTest,
 
     OWTFCliWebPluginTest,
-    OWTFCliWebActiveWVS006PluginTest
+    OWTFCliWebActivePluginTest
 ]
