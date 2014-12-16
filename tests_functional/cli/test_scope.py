@@ -11,8 +11,7 @@ class OWTFCliScopeTest(OWTFCliTestCase):
 
     def test_cli_target_is_valid_ip(self):
         """Run OWTF with a valid IP target."""
-        self.args += ['%s:%s' % (self.IP, self.PORT)]
-        self.run_owtf()
+        self.run_owtf('-s', '%s:%s' % (self.IP, self.PORT))
         self.assert_is_in_logs('(net/', name='Worker')
         self.assert_is_not_in_logs('(web/', name='Worker')
         self.assert_is_not_in_logs('(aux/', name='Worker')
