@@ -9,12 +9,16 @@ class OWTFCliScopeTest(OWTFCliTestCase):
 
     categories = ['cli']
 
-    @unittest.skip("Currently broken.")
-    def test_cli_target_with_no_protocol(self):
-        """Run OWTF with a target but no protocol."""
+    def test_cli_target_with_valid_ip(self):
+        """Run OWTF with a valid IP target."""
         self.args += ['%s:%s' % (self.IP, self.PORT)]
         self.run_owtf()
-        self.assert_is_in_logs("#TODO")
+        self.assert_is_in_logs('(net/', name='Worker')
+        self.assert_is_not_in_logs('(web/', name='Worker')
+        self.assert_is_not_in_logs('(aux/', name='Worker')
+        self.assert_is_in_logs(
+            "All jobs have been done. Exiting.",
+            name='MainProcess')
 
     def test_cli_target_is_invalid(self):
         """Run OWTF with an invalid target."""
