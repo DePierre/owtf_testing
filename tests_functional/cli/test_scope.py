@@ -9,7 +9,7 @@ class OWTFCliScopeTest(OWTFCliTestCase):
 
     categories = ['cli']
 
-    def test_cli_target_with_valid_ip(self):
+    def test_cli_target_is_valid_ip(self):
         """Run OWTF with a valid IP target."""
         self.args += ['%s:%s' % (self.IP, self.PORT)]
         self.run_owtf()
