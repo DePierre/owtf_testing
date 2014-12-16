@@ -39,7 +39,6 @@ class OWTFCliTestCase(unittest.TestCase):
     def tearDown(self):
         self.raw_input_patcher.stop()
         self.clean_logs()
-        self.clean_old_runs()
 
     ###
     # OWTF utils methods.
