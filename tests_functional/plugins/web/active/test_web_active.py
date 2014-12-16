@@ -12,7 +12,7 @@ class OWTFCliWebActivePluginTest(OWTFCliWebPluginTestCase):
         """Test OWTF web active WVS 001 plugin."""
         self.run_owtf('-o', 'OWTF-WVS-001', '-t', 'active', "%s://%s:%s" % (self.PROTOCOL, self.IP, self.PORT))
         self.assert_is_in_logs(
-            '1 - Target: %s://%s:%s -> Plugin: Arachni Unauthenticated (active)' % (self.PROTOCOL, self.IP, self.PORT),
+            '1 - Target: %s://%s:%s -> Plugin: Arachni Unauthenticated (web/active)' % (self.PROTOCOL, self.IP, self.PORT),
             name='Worker')
         # Test arachni didn't raise an error
         self.assert_is_not_in_logs('unrecognized option', name='Worker')
@@ -26,7 +26,7 @@ class OWTFCliWebActivePluginTest(OWTFCliWebPluginTestCase):
         self.run_owtf('-o', 'OWTF-WVS-006', '-t', 'active', "%s://%s:%s" % (self.PROTOCOL, self.IP, self.PORT))
         # Test Skipfish went OK.
         self.assert_is_in_logs(
-            '1 - Target: %s://%s:%s -> Plugin: Skipfish Unauthenticated (active)' % (self.PROTOCOL, self.IP, self.PORT),
+            '1 - Target: %s://%s:%s -> Plugin: Skipfish Unauthenticated (web/active)' % (self.PROTOCOL, self.IP, self.PORT),
             name='Worker')
         self.assert_is_in_logs('This was a great day for science!', name='Worker')
         self.assert_is_in_logs('Execution Start Date/Time:', name='Worker')
