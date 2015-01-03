@@ -168,4 +168,5 @@ class OWTFCliWebPluginTestCase(OWTFCliTestCase):
         self.server.start()
 
     def tearDown(self):
+        super(OWTFCliWebPluginTestCase, self).tearDown()
         self.server.stop()
