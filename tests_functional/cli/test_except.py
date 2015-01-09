@@ -3,7 +3,7 @@ from owtf_testing.utils.owtftest import OWTFCliTestCase
 
 class OWTFCliExceptTest(OWTFCliTestCase):
 
-    categories = ['cli', 'fast']
+    categories = ['cli']
 
     def test_except(self):
         """Run OWTF web plugins except one."""
