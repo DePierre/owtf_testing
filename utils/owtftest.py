@@ -1,3 +1,4 @@
+from __future__ import print_function
 import os
 import copy
 import glob
@@ -49,6 +50,7 @@ class OWTFCliTestCase(unittest.TestCase):
             args = self.DEFAULT_ARGS[:]
         if extra_args:
             args += extra_args
+        print("with the following options: %s" % args)
         owtf.main(args)
         self.load_logs()
 
