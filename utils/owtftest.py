@@ -106,52 +106,37 @@ class OWTFCliTestCase(unittest.TestCase):
     # Specific methods that test logs and function calls.
     ###
 
-    def assert_has_been_logged(self, msg, name=None):
+    def assert_has_been_logged(self, text, name=None, msg=None):
         if name and name in self.logs:
-            assert_that(self.logs[name], has_item(msg))
+            assert_that(self.logs[name], has_item(text), msg)
         else:
-            assert_that(self.logs_all, has_item(msg))
+            assert_that(self.logs_all, has_item(text), msg)
 
-    def assert_has_not_been_logged(self, msg, name=None):
+    def assert_has_not_been_logged(self, text, name=None, msg=None):
         if name and name in self.logs:
-            assert_that(self.logs[name], not(has_item(msg)))
+            assert_that(self.logs[name], not(has_item(text)), msg)
         else:
-            assert_that(self.logs_all, not(has_item(msg)))
+            assert_that(self.logs_all, not(has_item(text)), msg)
 
-    def assert_is_in_logs(self, msg, name=None):
+    def assert_is_in_logs(self, text, name=None, msg=None):
         if name and name in self.logs:
-            self.assertTrue(
-                msg in str(self.logs[name]),
-                msg="Was expecting '%s' in '%s'." % (msg, self.logs[name]))
+            self.assertTrue(text in str(self.logs[name]), msg)
         else:
-            self.assertTrue(
-                msg in str(self.logs_all),
-                msg="Was expecting '%s' in '%s'." % (msg, self.logs_all))
+            self.assertTrue(text in str(self.logs_all), msg)
 
-    def assert_is_not_in_logs(self, msg, name=None):
+    def assert_is_not_in_logs(self, text, name=None, msg=None):
         if name and name in self.logs:
-            self.assertFalse(
-                msg in str(self.logs[name]),
-                msg="Was not expecting '%s' in '%s'." % (msg, self.logs[name]))
+            self.assertFalse(text in str(self.logs[name]), msg)
         else:
-            self.assertFalse(
-                msg in str(self.logs_all),
-                msg="Was not expecting '%s' in '%s'." % (msg, self.logs_all))
+            self.assertFalse(text in str(self.logs_all), msg)
 
-    def assert_are_in_logs(self, msgs, name=None):
-        for msg in msgs:
-            self.assert_is_in_logs(msg, name=name)
+    def assert_are_in_logs(self, texts, name=None, msg=None):
+        for text in texts:
+            self.assert_is_in_logs(text, name, msg)
 
-    def assert_are_not_in_logs(self, msgs, name=None):
-        for msg in msgs:
-            self.assert_is_not_in_logs(msg, name=name)
-
-    @staticmethod
-    def assert_called_with(mock_obj, *args):
-        """Assert that ``mock_obj`` has been called with all elements from
-        ``args`` (in order).
-        """
-        mock_obj.assert_any_call(*args)
+    def assert_are_not_in_logs(self, texts, name=None, msg=None):
+        for text in texts:
+            self.assert_is_not_in_logs(text, name, msg)
 
 
 class OWTFCliWebPluginTestCase(OWTFCliTestCase):
