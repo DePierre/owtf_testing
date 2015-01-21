@@ -2,6 +2,7 @@ import os
 import copy
 import glob
 
+import tornado
 import unittest
 import mock
 from hamcrest import *
@@ -170,3 +171,4 @@ class OWTFCliWebPluginTestCase(OWTFCliTestCase):
     def tearDown(self):
         super(OWTFCliWebPluginTestCase, self).tearDown()
         self.server.stop()
+        tornado.ioloop.IOLoop.clear_instance()
