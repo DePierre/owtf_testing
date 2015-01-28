@@ -22,6 +22,7 @@ class OWTFCliTestCase(unittest.TestCase):
     DEFAULT_ARGS = ['owtf.py', '--nowebui']
     PROTOCOL = 'http'
     IP = '127.0.0.1'
+    DOMAIN = 'localhost'
     PORT = '8888'
 
     def __init__(self, methodName='runTest'):
