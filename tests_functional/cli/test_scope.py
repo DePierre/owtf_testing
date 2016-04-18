@@ -13,7 +13,7 @@ class OWTFCliScopeTest(OWTFCliTestCase):
         """Run OWTF with a valid IP target (regression #375)."""
         self.run_owtf('-s', '%s:%s' % (self.IP, self.PORT))
         self.assert_is_in_logs(
-            '(net/',
+            '(network/',
             name='Worker',
             msg='Net plugins should have been run!')
         self.assert_is_not_in_logs(
@@ -21,7 +21,7 @@ class OWTFCliScopeTest(OWTFCliTestCase):
             name='Worker',
             msg='Web plugins should not have been run!')
         self.assert_is_not_in_logs(
-            '(aux/',
+            '(auxiliary/',
             name='Worker',
             msg='Web plugins should not have been run!')
         self.assert_is_in_logs(
@@ -42,8 +42,8 @@ class OWTFCliScopeTest(OWTFCliTestCase):
         """Run OWTF with a valid http target."""
         self.run_owtf('-s', '%s://%s:%s' % (self.PROTOCOL, self.DOMAIN, self.PORT))
         self.assert_is_in_logs('(web/', name='Worker')
-        self.assert_is_not_in_logs('(net/', name='Worker')
-        self.assert_is_not_in_logs('(aux/', name='Worker')
+        self.assert_is_not_in_logs('(network/', name='Worker')
+        self.assert_is_not_in_logs('(auxiliary/', name='Worker')
         self.assert_is_in_logs(
             "All jobs have been done. Exiting.",
             name='MainProcess',
@@ -56,8 +56,8 @@ class OWTFCliScopeTest(OWTFCliTestCase):
             '%s://%s:%s' % (self.PROTOCOL, self.DOMAIN, self.PORT),
             '%s://%s:%s' % (self.PROTOCOL, self.IP, self.PORT))
         self.assert_is_in_logs('(web/', name='Worker')
-        self.assert_is_in_logs('(net/', name='Worker')
-        self.assert_is_not_in_logs('(aux/', name='Worker')
+        self.assert_is_in_logs('(network/', name='Worker')
+        self.assert_is_not_in_logs('(auxiliary/', name='Worker')
         self.assert_is_in_logs(
             "All jobs have been done. Exiting.",
             name='MainProcess',
@@ -71,8 +71,8 @@ class OWTFCliScopeTest(OWTFCliTestCase):
             '%s://%s:%s' % (self.PROTOCOL, self.DOMAIN, self.PORT),
             '%s://%s:%s' % (self.PROTOCOL, self.IP, self.PORT))
         self.assert_is_in_logs('(web/', name='Worker')
-        self.assert_is_not_in_logs('(net/', name='Worker')
-        self.assert_is_not_in_logs('(aux/', name='Worker')
+        self.assert_is_not_in_logs('(network/', name='Worker')
+        self.assert_is_not_in_logs('(auxiliary/', name='Worker')
         self.assert_is_in_logs(
             "All jobs have been done. Exiting.",
             name='MainProcess',
@@ -82,12 +82,12 @@ class OWTFCliScopeTest(OWTFCliTestCase):
         """Run OWTF with a valid http target, a valid IP one and net group (regression #375)."""
         self.run_owtf(
             '-s',
-            '-g', 'net',
+            '-g', 'network',
             '%s://%s:%s' % (self.PROTOCOL, self.DOMAIN, self.PORT),
             '%s://%s:%s' % (self.PROTOCOL, self.IP, self.PORT))
-        self.assert_is_in_logs('(net/', name='Worker')
+        self.assert_is_in_logs('(network/', name='Worker')
         self.assert_is_not_in_logs('(web/', name='Worker')
-        self.assert_is_not_in_logs('(aux/', name='Worker')
+        self.assert_is_not_in_logs('(auxiliary/', name='Worker')
         self.assert_is_in_logs(
             "All jobs have been done. Exiting.",
             name='MainProcess',

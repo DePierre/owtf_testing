@@ -12,18 +12,18 @@ class OWTFCliListPluginsTest(OWTFCliTestCase):
         """Run OWTF to list the aux plugins."""
         expected = ['Available AUXILIARY plugins', 'exploit', 'smb', 'bruteforce', 'dos', 'wafbypasser', 'se', 'rce', 'selenium']
 
-        self.run_owtf('-l', 'aux')
+        self.run_owtf('-l', 'auxiliary')
         self.assert_are_in_logs(expected, name='MainProcess')
-        self.run_owtf('--list_plugins', 'aux')
+        self.run_owtf('--list_plugins', 'auxiliary')
         self.assert_are_in_logs(expected, name='MainProcess')
 
     def test_cli_list_plugins_net(self):
         """Run OWTF to list the net plugins."""
         expected = ['Available NET plugins', 'active', 'bruteforce']
 
-        self.run_owtf('-l', 'net')
+        self.run_owtf('-l', 'network')
         self.assert_are_in_logs(expected, name='MainProcess')
-        self.run_owtf('--list_plugins', 'net')
+        self.run_owtf('--list_plugins', 'network')
         self.assert_are_in_logs(expected, name='MainProcess')
 
     def test_cli_list_plugins_web(self):
