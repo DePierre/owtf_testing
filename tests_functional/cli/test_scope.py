@@ -23,7 +23,7 @@ class OWTFCliScopeTest(OWTFCliTestCase):
         self.assert_is_not_in_logs(
             '(auxiliary/',
             name='Worker',
-            msg='Web plugins should not have been run!')
+            msg='Aux plugins should not have been run!')
         self.assert_is_in_logs(
             "All jobs have been done. Exiting.",
             name='MainProcess',
