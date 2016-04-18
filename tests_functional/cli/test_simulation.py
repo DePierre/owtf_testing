@@ -21,7 +21,7 @@ class OWTFCliSimulationTest(OWTFCliTestCase):
             plugin_handler.Simulation,
             msg='OWTF should have been run in simulation mode!')
 
-    def test_cli_no_simualtion(self):
+    def test_cli_no_simulation(self):
         """Run OWTF not in simulation mode."""
         self.run_owtf()
         self.assert_is_in_logs(
