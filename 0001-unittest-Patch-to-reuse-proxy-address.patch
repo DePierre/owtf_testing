@@ -1,0 +1,34 @@
+From 4036fb91889afacd29dd7c66331ecdfd27b1206e Mon Sep 17 00:00:00 2001
+From: Tao Sauvage <sauvage.tao@gmail.com>
+Date: Thu, 21 Apr 2016 12:28:37 +0200
+Subject: [PATCH] [unittest] Patch to reuse proxy address.
+
+---
+ framework/core.py | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/framework/core.py b/framework/core.py
+index 9119f9a..834556a 100644
+--- a/framework/core.py
++++ b/framework/core.py
+@@ -139,11 +139,12 @@ class Core(BaseComponent):
+                     int(self.db_config.Get('INBOUND_PROXY_PORT'))))
+                 temp_socket.close()
+             except socket.error:
+-                self.error_handler.FrameworkAbort(
+-                    "Inbound proxy address " +
+-                    self.db_config.Get('INBOUND_PROXY_IP') + ":" +
+-                    self.db_config.Get("INBOUND_PROXY_PORT") +
+-                    " already in use")
++                #self.error_handler.FrameworkAbort(
++                #    "Inbound proxy address " +
++                #    self.db_config.Get('INBOUND_PROXY_IP') + ":" +
++                #    self.db_config.Get("INBOUND_PROXY_PORT") +
++                #    " already in use")
++                pass
+ 
+             # If everything is fine.
+             self.ProxyProcess = proxy.ProxyProcess()
+-- 
+2.8.0
+
