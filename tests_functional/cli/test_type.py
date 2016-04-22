@@ -12,7 +12,7 @@ class OWTFCliTypeTest(OWTFCliWebPluginTestCase):
 
     def test_cli_type_no_group_and_type_when_host(self):
         """Web group should be selected based on the host (regression #390)."""
-        self.run_owtf('--nowebui', '-s', '-t', 'active', "%s://%s:%s" % (self.PROTOCOL, self.IP, self.PORT))
+        self.run_owtf('-s', '-t', 'active', "%s://%s:%s" % (self.PROTOCOL, self.IP, self.PORT))
         self.assert_is_in_logs('(web/', name='Worker', msg='Web plugins should have been run!')
         self.assert_is_not_in_logs('(auxiliary/', name='Worker', msg='Aux plugins should not have been run!')
         self.assert_is_not_in_logs('(network/', name='Worker', msg='Net plugins should not have been run!')
@@ -21,7 +21,7 @@ class OWTFCliTypeTest(OWTFCliWebPluginTestCase):
 
     def test_cli_type_no_group_and_type_when_ip(self):
         """Net group should be selected based on the ip (regression #390)."""
-        self.run_owtf('--nowebui', '-s', '-t', 'active', "%s:%s" % (self.IP, self.PORT))
+        self.run_owtf('-s', '-t', 'active', "%s:%s" % (self.IP, self.PORT))
         self.assert_is_in_logs('(network/', name='Worker', msg='Net plugins should have been run!')
         self.assert_is_not_in_logs('(auxiliary/', name='Worker', msg='Aux plugins should not have been run!')
         self.assert_is_not_in_logs('(web/', name='Worker', msg='Web plugins should not have been run!')
