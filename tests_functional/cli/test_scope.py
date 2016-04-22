@@ -54,7 +54,7 @@ class OWTFCliScopeTest(OWTFCliTestCase):
         self.run_owtf(
             '-s',
             '%s://%s:%s' % (self.PROTOCOL, self.DOMAIN, self.PORT),
-            '%s://%s:%s' % (self.PROTOCOL, self.IP, self.PORT))
+            '%s:%s' % (self.IP, self.PORT))
         self.assert_is_in_logs('(web/', name='Worker', msg='Web plugins should have been run!')
         self.assert_is_in_logs('(network/', name='Worker', msg='Net plugins should have been run!')
         self.assert_is_not_in_logs('(auxiliary/', name='Worker', msg='Aux plugins should not have been run!')
