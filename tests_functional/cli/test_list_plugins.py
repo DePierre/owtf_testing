@@ -17,7 +17,7 @@ class OWTFCliListPluginsTest(OWTFCliTestCase):
 
     def test_cli_list_plugins_net(self):
         """Run OWTF to list the net plugins."""
-        expected = ['Available NET plugins', 'active', 'bruteforce']
+        expected = ['Available NETWORK plugins', 'active', 'bruteforce']
 
         self.run_owtf('-l', 'network')
         self.assert_are_in_logs(expected, name='MainProcess')
