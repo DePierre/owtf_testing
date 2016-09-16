@@ -1,5 +1,5 @@
 #!/bin/sh
-wget https://skipfish.googlecode.com/files/skipfish-2.10b.tgz
+wget https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/skipfish/skipfish-2.10b.tgz
 tar zxvf skipfish-2.10b.tgz
 sudo apt-get install libidn11-dev
 cd skipfish-2.10b
